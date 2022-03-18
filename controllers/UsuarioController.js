@@ -33,17 +33,7 @@ module.exports = class UsuarioController {
             res.status(422).json({message: 'O e-mail é obrigatório'})
             return
         }
-
-        if(!senha) {
-            res.status(422).json({message: 'A senha é obrigatória'})
-            return
-        }
-
-        if(!confirmacaosenha) {
-            res.status(422).json({message: 'A confirmação de senha é obrigatória'})
-            return
-        }
-
+        
         if(!telefone) {
             res.status(422).json({message: 'O telefone é obrigatório'})
             return
@@ -66,6 +56,16 @@ module.exports = class UsuarioController {
 
         if(!tecnologia) {
             res.status(422).json({message: 'Campo tecnologias é obrigatório'})
+            return
+        }
+
+        if(!senha) {
+            res.status(422).json({message: 'A senha é obrigatória'})
+            return
+        }
+
+        if(!confirmacaosenha) {
+            res.status(422).json({message: 'A confirmação de senha é obrigatória'})
             return
         }
 
