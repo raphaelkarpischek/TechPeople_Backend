@@ -39,12 +39,12 @@ module.exports = class UsuarioController {
             return
         }
 
-        if(!estado) {
+        if(!estado || estado === 'Selecione uma opção') {
             res.status(422).json({message: 'O estado é obrigatório'})
             return
         }
 
-        if(!area) {
+        if(!area || area === 'Selecione uma opção') {
             res.status(422).json({message: 'A area de atuação é obrigatória'})
             return
         }
@@ -142,6 +142,7 @@ module.exports = class UsuarioController {
         } = req.body
 
         let novaSenha = ''
+        let senhaAtual = ''
 
         let novaImagem = usuario.imagem
 
@@ -178,6 +179,8 @@ module.exports = class UsuarioController {
             const senhaCriptografada = await bcrypt.hash(senha, salt)
 
             novaSenha = senhaCriptografada
+        } else if (senha == null) {
+            senhaAtual = usuario.senha
         }
 
         if(!telefone) {
@@ -205,10 +208,19 @@ module.exports = class UsuarioController {
             return
         }
 
-        const atualizacaoUsuario = {
-            nome, email, senha: novaSenha, imagem: novaImagem,
+        let atualizacaoUsuario = {
+            nome, email, imagem: novaImagem,
             telefone, estado, area, descricao, tecnologia
         }
+
+        // Valida se usuário troucou a senha ou não
+        if(novaSenha !== '') {
+            atualizacaoUsuario.senha = novaSenha 
+        } else {
+            atualizacaoUsuario.senha = senhaAtual
+        }
+
+        console.log(atualizacaoUsuario)
 
         try {
             const usuarioAtualizado = await Usuario.update
@@ -235,16 +247,30 @@ module.exports = class UsuarioController {
         }
     }
 
+    static async checkUsuario(req, res) {
+
+        const token = coletaToken(req)
+        const usuario =  await buscaUsuarioToken(token)
+
+        if(!usuario) {
+            res.status(404).json({message: 'Usuário não encontrado'})
+        } else {
+            delete usuario.dataValues['senha'] 
+            res.status(200).json(usuario)
+        }
+
+    }
+
     static async buscaUsuarios(req, res) {
         const usuarios = await Usuario.findAll({
-            attributes: {exclude: ['id', 'senha', 'createdAt', 'updatedAt']}
+            attributes: {exclude: ['senha', 'createdAt', 'updatedAt']}
         })
 
         if(!usuarios) {
             res.status(404).json({message: 'Nenhum usuário encontrado'})
         }
 
-        res.status(200).json(usuarios)
+        res.status(200).json({ usuarios: usuarios })
     }
 
 }

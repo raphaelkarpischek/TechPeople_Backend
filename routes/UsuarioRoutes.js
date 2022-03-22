@@ -10,6 +10,7 @@ router.post('/cadastro', imageUpload.single("image"), UsuarioController.cadastro
 router.post('/login', UsuarioController.loginUsuario)
 router.patch('/edicao', verificaToken, imageUpload.single("image"), UsuarioController.atualizaUsuario)
 router.delete('/exclusao', UsuarioController.deletaUsuario)
+router.get('/check', verificaToken, UsuarioController.checkUsuario)
 router.get('/', UsuarioController.buscaUsuarios)
 
 module.exports = router
