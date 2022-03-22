@@ -8,98 +8,25 @@ const criaTokenUsuario = require('../helpers/token-usuario')
 const coletaToken = require('../helpers/coleta-token')
 const buscaUsuarioToken = require('../helpers/busca-usuario-token')
 
+// Validation
+const cadastroValidation = require('../validations/CadastroValidation')
+
 module.exports = class UsuarioController {
 
     static async cadastroUsuario(req, res) {
-        const { 
-            nome, email, senha, confirmacaosenha,
-            telefone, estado, area, descricao, tecnologia 
-        } = req.body
 
-        // Validações
-        if(!req.file) {
-            res.status(422).json({message: 'A imagem de perfil é obrigatória'})
-            return
-        }
-
-        const imagem = req.file.filename
-
-        if(!nome) {
-            res.status(422).json({message: 'O nome é obrigatório'})
-            return
-        }
-
-        if(!email) {
-            res.status(422).json({message: 'O e-mail é obrigatório'})
-            return
-        }
+        const usuario = await cadastroValidation(req, res) // Função para validar entrada de dados e criptografar senha
         
-        if(!telefone) {
-            res.status(422).json({message: 'O telefone é obrigatório'})
-            return
-        }
+        if(usuario !== undefined) {
+            
+            try {
+                const usuarioCadastrado = await Usuario.create(usuario)
 
-        if(!estado || estado === 'Selecione uma opção') {
-            res.status(422).json({message: 'O estado é obrigatório'})
-            return
-        }
-
-        if(!area || area === 'Selecione uma opção') {
-            res.status(422).json({message: 'A area de atuação é obrigatória'})
-            return
-        }
-
-        if(!descricao) {
-            res.status(422).json({message: 'A descrição é obrigatória'})
-            return
-        }
-
-        if(!tecnologia) {
-            res.status(422).json({message: 'Campo tecnologias é obrigatório'})
-            return
-        }
-
-        if(!senha) {
-            res.status(422).json({message: 'A senha é obrigatória'})
-            return
-        }
-
-        if(!confirmacaosenha) {
-            res.status(422).json({message: 'A confirmação de senha é obrigatória'})
-            return
-        }
-
-        if(senha !== confirmacaosenha) {
-            res.status(422).json({message: 'As senhas não conferem'})
-            return
-        }
-
-        // Verificando se e-mail já está em uso
-        const emailDisponivel = await Usuario.findOne({where: { email: email }})
-
-        if (emailDisponivel) {
-            res.status(422).json({message: 'Por favor utilize outro e-mail'})
-            return
-        }
-
-        //Criptografando senha
-        const salt = await bcrypt.genSalt(10)
-        const senhaCriptografada = await bcrypt.hash(senha, salt)
-
-        // Montando novo usuário
-        const usuario = {
-            nome, email, senha: senhaCriptografada, imagem,
-            telefone, estado, area, descricao, tecnologia
-        }
-
-        try {
-            const usuarioCadastrado = await Usuario.create(usuario)
-
-            await criaTokenUsuario(usuarioCadastrado, req, res) // Função para criar Token JWT
-        } catch (err) {
-            res.status(500).json({ message: error })
-        }
-
+                await criaTokenUsuario(usuarioCadastrado, req, res) // Função para criar Token JWT
+            } catch (err) {
+                res.status(500).json({ message: err })
+            }
+        } 
     }
 
     static async loginUsuario(req, res) {
