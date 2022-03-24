@@ -188,6 +188,22 @@ module.exports = class UsuarioController {
 
     }
 
+    static async buscaUsuarioId(req, res) {
+        const id = req.params.id
+
+        const usuario = await Usuario.findOne({where: { id: id },
+            attributes: {
+                exclude: ['id', 'senha', 'created', 'updateAt']
+            }
+        })
+
+        if(!usuario) {
+            res.status(422).json({message: 'Usuário não encontrado'})
+        }
+
+        res.status(200).json(usuario)
+    }
+
     static async buscaUsuarios(req, res) {
         const usuarios = await Usuario.findAll({
             attributes: {exclude: ['senha', 'createdAt', 'updatedAt']}

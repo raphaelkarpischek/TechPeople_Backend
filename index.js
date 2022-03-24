@@ -9,7 +9,7 @@ const app = express()
 app.use(express.json())
 
 // Models
-const Usuarios = require('./models/Usuario')
+const Usuario = require('./models/Usuario')
 
 // Cors config
 app.use(cors({ credential: true, origin: 'http://localhost:3000' }))
