@@ -39,8 +39,16 @@ const Usuario = db.define('User', {
     tecnologia: {
         type: DataTypes.STRING,
         require: true
-    }
-
+    },
+    visita: {
+        type: DataTypes.INTEGER,
+        require: false,
+        defaultValue: 0
+    },
+    visivel: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: 1
+    },
 })
 
 module.exports = Usuario

@@ -191,21 +191,34 @@ module.exports = class UsuarioController {
     static async buscaUsuarioId(req, res) {
         const id = req.params.id
 
+        let usuarioLogado = {}
+
+        try {
+            const token = coletaToken(req)
+            usuarioLogado = await buscaUsuarioToken(token)
+        } catch {
+
+        }
+        
         const usuario = await Usuario.findOne({where: { id: id },
             attributes: {
-                exclude: ['id', 'senha', 'created', 'updateAt']
+                exclude: ['senha', 'created', 'updateAt']
             }
         })
 
         if(!usuario) {
             res.status(422).json({message: 'Usuário não encontrado'})
+            return
+        } else if(usuario.id === usuarioLogado.id) {
+            return res.status(200).json(usuario) 
+        } else {
+            await Usuario.update({visita: usuario.visita + 1}, {where: { id: usuario.id }})
+            return res.status(200).json(usuario) 
         }
-
-        res.status(200).json(usuario)
     }
 
     static async buscaUsuarios(req, res) {
-        const usuarios = await Usuario.findAll({
+        const usuarios = await Usuario.findAll({where: { visivel:1 }}, {
             attributes: {exclude: ['senha', 'createdAt', 'updatedAt']}
         })
 
@@ -214,6 +227,28 @@ module.exports = class UsuarioController {
         }
 
         res.status(200).json({ usuarios: usuarios })
+    }
+
+    static async visibilidadeUsuario(req, res) {
+
+        const token = coletaToken(req)
+        const usuario =  await buscaUsuarioToken(token)
+
+        if(usuario.visivel === false) {
+            await Usuario.update({visivel: 1}, {
+                where: { id: usuario.id }
+            })
+
+            res.status(200).send({message: 'Perfil ativado para buscas'})
+            return
+        } else {
+            await Usuario.update({visivel: 0}, {
+                where: { id: usuario.id }
+            })
+
+            res.status(200).send({message: 'Perfil desativado para buscas'})
+            return
+        }
     }
 
 }

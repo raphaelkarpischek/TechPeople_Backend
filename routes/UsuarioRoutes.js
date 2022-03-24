@@ -13,5 +13,6 @@ router.delete('/exclusao', UsuarioController.deletaUsuario)
 router.get('/check', verificaToken, UsuarioController.checkUsuario)
 router.get('/:id', UsuarioController.buscaUsuarioId)
 router.get('/', UsuarioController.buscaUsuarios)
+router.patch('/visibilidade', UsuarioController.visibilidadeUsuario)
 
 module.exports = router
