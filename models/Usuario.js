@@ -40,6 +40,14 @@ const Usuario = db.define('User', {
         type: DataTypes.STRING,
         require: true
     },
+    github: {
+        type: DataTypes.STRING,
+        require: true
+    },
+    linkedin: {
+        type: DataTypes.STRING,
+        require: true
+    },
     visita: {
         type: DataTypes.INTEGER,
         require: false,

@@ -1,4 +1,5 @@
 const Usuario = require('../models/Usuario')
+const { Op }= require('sequelize')
 
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -249,6 +250,33 @@ module.exports = class UsuarioController {
             res.status(200).send({message: 'Perfil desativado para buscas'})
             return
         }
+    }
+
+    static async pesquisaUsuario(req, res) {
+        const { parametro } = req.body
+
+        const usuarios = await Usuario.findAll({where: {
+            [Op.or]: {
+                nome: {
+                    [Op.like]: `%${parametro}%`
+                },
+                [Op.or]: {
+                    tecnologia: {
+                        [Op.like]: `%${parametro}%`
+                    },
+                    area: {
+                        [Op.like]: `%${parametro}%`
+                    }
+                }
+            }
+        }})
+
+        if(usuarios.length === 0) {
+            res.status(422).json({message: 'Nenhum usuário encontrado com o termo utilizado'})
+            return
+        }
+
+        res.status(200).json({usuarios, message: `${usuarios.length} perfil(is) encontrado(s) com o termo utilizado: ${parametro}`})
     }
 
 }

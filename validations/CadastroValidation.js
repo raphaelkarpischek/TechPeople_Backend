@@ -7,7 +7,7 @@ const cadastroValidation = async (req, res) => {
 
     const { 
         nome, email, senha, confirmacaosenha,
-        telefone, estado, area, descricao, tecnologia 
+        telefone, estado, area, descricao, tecnologia, github, linkedin 
     } = req.body
 
 
@@ -53,6 +53,16 @@ const cadastroValidation = async (req, res) => {
         return
     }
 
+    if(!github) {
+        res.status(422).json({message: 'Link do seu github é obrigatório'})
+        return
+    }
+
+    if(!linkedin) {
+        res.status(422).json({message: 'Link do seu linkedin é obrigatório'})
+        return
+    }
+
     if(!senha) {
         res.status(422).json({message: 'A senha é obrigatória'})
         return
@@ -81,7 +91,7 @@ const cadastroValidation = async (req, res) => {
     // Montando novo usuário
     const usuario = {
         nome, email, senha: senhaCriptografada, imagem,
-        telefone, estado, area, descricao, tecnologia
+        telefone, estado, area, descricao, tecnologia, github, linkedin
     }
 
     return usuario

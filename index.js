@@ -23,7 +23,7 @@ const UserRoutes = require('./routes/UsuarioRoutes')
 app.use('/usuarios', UserRoutes)
 
 conn
-    //.sync({ force: true })
+    //sync({ force: true })
     .sync()
     .then(() => {
         app.listen(port, () => {
