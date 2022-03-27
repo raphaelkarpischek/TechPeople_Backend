@@ -12,7 +12,7 @@ app.use(express.json())
 const Usuario = require('./models/Usuario')
 
 // Cors config
-app.use(cors({ credential: true, origin: 'http://localhost:3000' }))
+app.use(cors({ credential: true, origin: 'https://techpeople-frontend.herokuapp.com/' }))
 
 // Pasta para IMGs
 app.use(express.static('public'))
