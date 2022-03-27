@@ -26,7 +26,7 @@ conn
     //sync({ force: true })
     .sync()
     .then(() => {
-        app.listen(port, () => {
+        app.listen(3000, () => {
             console.log(`App rodando na porta ${port}`)
         })
     })
