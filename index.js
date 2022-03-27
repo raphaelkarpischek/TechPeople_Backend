@@ -12,7 +12,18 @@ app.use(express.json())
 const Usuario = require('./models/Usuario')
 
 // Cors config
-app.use(cors({ credential: true, origin: 'https://techpeople-frontend.herokuapp.com/' }))
+const whiteList = ["http://localhost:3000", "https://techpeople-frontend.herokuapp.com"]
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (!origin || whiteList.indexOf(origin) !== -1) {
+            callback(null, true)
+          } else {
+            callback(new Error("Not allowed by CORS"))
+          }
+    },
+    credential: true,
+}
+app.use(cors(corsOptions))
 
 // Pasta para IMGs
 app.use(express.static('public'))
