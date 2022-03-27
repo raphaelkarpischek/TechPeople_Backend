@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const conn = require('./db/conn')
 
-const port = 5000
+//const port = 5000
 
 const app = express()
 
@@ -26,7 +26,7 @@ conn
     //sync({ force: true })
     .sync()
     .then(() => {
-        app.listen(3000, () => {
+        app.listen(process.env.PORT || 3000, () => {
             console.log(`App rodando na porta ${port}`)
         })
     })
