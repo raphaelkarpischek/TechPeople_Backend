@@ -221,10 +221,7 @@ module.exports = class UsuarioController {
     static async buscaUsuarios(req, res) {
         const usuarios = await Usuario.findAll({
             attributes: {
-                exclude: ['senha', 'createdAt', 'updatedAt']}
-            }, 
-            {
-                where: { visivel:1 }
+                exclude: ['senha', 'createdAt', 'updatedAt']},  where: { visivel:1 }
             }
             )
 
