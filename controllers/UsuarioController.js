@@ -219,9 +219,14 @@ module.exports = class UsuarioController {
     }
 
     static async buscaUsuarios(req, res) {
-        const usuarios = await Usuario.findAll({where: { visivel:1 }}, {
-            attributes: {exclude: ['senha', 'createdAt', 'updatedAt']}
-        })
+        const usuarios = await Usuario.findAll({
+            attributes: {
+                exclude: ['senha', 'createdAt', 'updatedAt']}
+            }, 
+            {
+                where: { visivel:1 }
+            }
+            )
 
         if(!usuarios) {
             res.status(404).json({message: 'Nenhum usuário encontrado'})
