@@ -27,7 +27,7 @@ conn
     .sync()
     .then(() => {
         app.listen(process.env.PORT || 3000, () => {
-            console.log(`App rodando na porta ${port}`)
+            console.log(`App rodando na porta`)
         })
     })
     .catch((err) => console.log(err))
