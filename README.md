@@ -1,5 +1,5 @@
 # TechPeople - Backend
-Sobre: Back-end da aplicação TechPeople, desenvolvido em React.JS
+Sobre: Back-end da aplicação TechPeople, desenvolvido em Node.JS
 
 <h1>Requirementos:</h1>
 - Node.JS </br>
