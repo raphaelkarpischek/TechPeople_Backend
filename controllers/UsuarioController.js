@@ -270,7 +270,7 @@ module.exports = class UsuarioController {
                         [Op.like]: `%${parametro}%`
                     }
                 }
-            }
+            }, visivel: true
         }})
 
         if(usuarios.length === 0) {
