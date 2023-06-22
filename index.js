@@ -12,7 +12,7 @@ app.use(express.json())
 const Usuario = require('./models/Usuario')
 
 // Cors config
-const whiteList = ["http://localhost:3000", "https://techpeople-frontend.herokuapp.com"]
+const whiteList = ["http://localhost:3000", "https://techpeople-frontend.herokuapp.com", "https://tech-people-frontend.vercel.app/"]
 const corsOptions = {
     origin: function (origin, callback) {
         if (!origin || whiteList.indexOf(origin) !== -1) {
